@@ -8,10 +8,18 @@
 
 #include <iostream>
 
+
 using namespace std;
 
 int main() {
     
-    cout << "Hello, World!\n";
+    float *arr = new float;
+    for (int i = 0; i < 10; i++)
+    {
+        arr[i] = (rand() % 10 + 1) / float((rand() % 10 + 1));
+        cout << arr[i] << " ";
+    }
+    
+    
     return 0;
 }
