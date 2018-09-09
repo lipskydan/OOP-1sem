@@ -105,7 +105,7 @@ void push_element ( Node* root, const int data)
     add = NULL;
 }
 
-void add ( Node* root, const int data)
+void add_for_two_group ( Node* root, const int data)
 {
     while ( root->next)
     {
@@ -141,7 +141,7 @@ void split ( Node* root, Node* first, Node* second, const int N )
             }
             else
             {
-                add(first, root->data);
+                add_for_two_group(first, root->data);
                 first = first->next;
             }
             
@@ -155,7 +155,7 @@ void split ( Node* root, Node* first, Node* second, const int N )
             }
             else
             {
-                add(second, root->data);
+                add_for_two_group(second, root->data);
                 second = second->next;
             }
             
