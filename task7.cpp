@@ -145,7 +145,7 @@ void quick_sort(int arr[], const unsigned size)
 {
     int left = 0;
     int right = size - 1;
-    int p = arr[size >> 1];
+    int p = arr[size >> 1]; // /2
     while (left < right)
     {
         while (arr[left] < p)
