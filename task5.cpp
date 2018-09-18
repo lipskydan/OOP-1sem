@@ -170,26 +170,28 @@ void split ( Node* root, Node* first, Node* second, const int N )
 int main()
 {
     Node* root = create_list(1);
-    Node* first = create_list();
-    Node* second = create_list();
+    //Node* first = create_list();
+    //Node* second = create_list();
     
     add_element(root, 2, 2);
     add_element(root, 4, 3);
     add_element(root, 5, 4);
+    
+    show_list(root);
     add_element(root, 3, 3);
     show_list(root);
-    //erase_element(root, 3);
-    // show_list(root);
+    erase_element(root, 3);
+    show_list(root);
     
     cout << endl << endl;
     
-    split(root, first, second, 5);
+   // split(root, first, second, 3);
     
-    cout << " First list : ";
-    show_list(first);
-    cout << " Second list : ";
-    show_list(second);
-    
+   // cout << " First list : ";
+   // show_list(first);
+   // cout << " Second list : ";
+  //  show_list(second);
+   //
     
     return 0;
 }
