@@ -25,6 +25,8 @@ public:
     void printAsMatrix();
     void printAsList();
     bool isLinked();
+    bool checked(int a, vector<int> vec);
+    void informOfLinking();
 private:
     int mData;
     vector<set<int>> mList;

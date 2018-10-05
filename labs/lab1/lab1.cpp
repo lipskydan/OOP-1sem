@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "graph.hpp"
+#include "graph.t.hpp"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ int main()
     first.initializeGraf();
     first.printAsList();
     first.printAsMatrix();
-    //first.isLinked();
+    first.informOfLinking();
     
     return 0;
 }
