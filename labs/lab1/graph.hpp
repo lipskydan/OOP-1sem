@@ -27,12 +27,11 @@ public:
     bool isLinked();
     bool checked(int a, vector<int> vec);
     void informOfLinking();
+    void showVec();
 private:
     int mData;
     vector<set<int>> mList;
-    vector<int> vec1;
-    vector<int> vec2;
-    vector<int> vec_full;
+    vector<int> vec;
 };
 
 #endif /* graph_hpp */

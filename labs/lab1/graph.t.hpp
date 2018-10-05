@@ -77,6 +77,14 @@ template<class T> void Graf<T>::printAsList()
     cout << endl;
 }
 
+template<class T> void Graf<T>::showVec()
+{
+    for (int i = 0; i < vec.size(); i++)
+    {
+        cout << vec[i] << " ";
+    }
+}
+
 template<class T> bool Graf<T>::checked(int a, vector<int> vec)
 {
     bool result = false;
@@ -93,7 +101,7 @@ template<class T> bool Graf<T>::checked(int a, vector<int> vec)
 template<class T> bool Graf<T>::isLinked()
 {
     bool isLinked = true;
-    vec1.push_back(1);
+    vec.push_back(1);
     
       for (int i = 0; i < mList.size(); i++)
       {
@@ -101,23 +109,18 @@ template<class T> bool Graf<T>::isLinked()
           {
                   if ( i == 0)
                   {
-                      vec1.push_back(*j);
+                      vec.push_back(*j);
                   }
-                  else if ( checked(i+1, vec1) == true  && checked(*j, vec1) == false )
+                  else if ( checked(i+1, vec) == true  && checked(*j, vec) == false )
                   {
-                      vec1.push_back(*j);
+                      vec.push_back(*j);
                   }
           }
       }
     
-    
-    
-    for (int i = 0; i < vec1.size(); i++)
-    {
-        cout << vec1[i] << " ";
-    }
-    
-    if (mList.size() == vec1.size())
+    showVec();
+   
+    if (mList.size() == vec.size())
     {
         isLinked = true;
     }
