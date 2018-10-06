@@ -20,6 +20,7 @@ int main()
     first.printAsList();
     first.printAsMatrix();
     first.informOfLinking();
+    first.lenght();
     
     return 0;
 }

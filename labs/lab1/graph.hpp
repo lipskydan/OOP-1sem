@@ -26,12 +26,15 @@ public:
     void printAsList();
     bool isLinked();
     bool checked(int a, vector<int> vec);
+    int checked2(int a, vector<set<int>> vec, int index);
     void informOfLinking();
     void showVec();
+    void lenght();
 private:
     int mData;
     vector<set<int>> mList;
-    vector<int> vec;
+    vector<int> vecLink;
+    vector<int> vecLenght;
 };
 
 #endif /* graph_hpp */

@@ -79,9 +79,9 @@ template<class T> void Graf<T>::printAsList()
 
 template<class T> void Graf<T>::showVec()
 {
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < vecLink.size(); i++)
     {
-        cout << vec[i] << " ";
+        cout << vecLink[i] << " ";
     }
 }
 
@@ -97,11 +97,29 @@ template<class T> bool Graf<T>::checked(int a, vector<int> vec)
      }
     return result;
 }
+template<class T> int Graf<T>::checked2(int a, vector<set<int>> vec, int index)
+{
+    int result = 0;
+    //int i = 0;
+     for (int i = 0; i < vec.size(); i++)
+     {
+         for (auto j = mList[i].begin(); j != mList[i].end(); j++)
+         {
+             auto tmp = mList[i].end();
+             if (a != *j && *j == *tmp && *tmp != NULL)
+             {
+                 result++;
+             }
+         }
+     }
+    
+    return result;
+}
 
 template<class T> bool Graf<T>::isLinked()
 {
     bool isLinked = true;
-    vec.push_back(1);
+    vecLink.push_back(1);
     
       for (int i = 0; i < mList.size(); i++)
       {
@@ -109,18 +127,29 @@ template<class T> bool Graf<T>::isLinked()
           {
                   if ( i == 0)
                   {
-                      vec.push_back(*j);
+                      vecLink.push_back(*j);
                   }
-                  else if ( checked(i+1, vec) == true  && checked(*j, vec) == false )
+                  else if ( checked(i+1, vecLink) == true  && checked(*j, vecLink) == false )
                   {
-                      vec.push_back(*j);
+                      vecLink.push_back(*j);
                   }
           }
       }
     
-    showVec();
+    for (int i = 0; i < mList.size(); i++)
+    {
+        if (checked(i+1, vecLink) == true )
+        {
+            for (auto j = mList[i].begin(); j != mList[i].end(); j++)
+            {
+                if (checked(*j, vecLink) == false)  vecLink.push_back(*j);
+            }
+        }
+    }
+    
+   // showVec();
    
-    if (mList.size() == vec.size())
+    if (mList.size() == vecLink.size())
     {
         isLinked = true;
     }
@@ -139,3 +168,29 @@ template<class T> void Graf<T>::informOfLinking()
     if ( result == true ) cout << " Linked :) " <<endl;
     else cout << " Not linked :( " <<endl;
 }
+
+template <class T> void Graf<T>::lenght()
+{
+    //cout << f << " <-> " << s << " length = " << lenght <<endl;
+    int res = 0;
+    
+    for (int i = 0; i < mList.size(); i++)
+    {
+        for (int j = i+1; j < mList.size(); j++)
+        {
+            auto tmp = mList[j].begin();
+            if ( i != j )
+            {
+                res = checked2(*tmp, mList, j);
+                if (res == 0) res++;
+                cout << i+1 << " <-> " << j+1 << " length = " << res << endl;
+            }
+        }
+        
+    }
+}
+    
+    
+
+
+
