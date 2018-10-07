@@ -9,6 +9,7 @@
 #include <iostream>
 #include "graph.hpp"
 #include "graph.t.hpp"
+#include "lotsVariable.hpp"
 
 using namespace std;
 
@@ -19,8 +20,10 @@ int main()
     first.initializeGraf();
     first.printAsList();
     first.printAsMatrix();
-    first.informOfLinking();
     first.lenght();
+    
+    lotsVariable second;
+    second.readLine();
     
     return 0;
 }

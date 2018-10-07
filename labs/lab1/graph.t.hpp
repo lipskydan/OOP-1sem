@@ -16,6 +16,11 @@ template<class T> Graf<T>::Graf(int size)
     mList.resize(size);
 }
 
+template<class T> Graf<T>::~Graf()
+{
+    
+}
+
 template<class T> void Graf<T>::initializeGraf()
 {
     srand(time(NULL));
@@ -87,16 +92,16 @@ template<class T> void Graf<T>::showVec()
 
 template<class T> bool Graf<T>::checked(int a, vector<int> vec)
 {
-    bool result = false;
      for (int i = 0; i < vec.size(); i++)
      {
          if ( a == vec[i])
          {
-             result = true;
+             return true;
          }
      }
-    return result;
+    return false;
 }
+
 template<class T> int Graf<T>::checked2(int a, vector<set<int>> vec, int index)
 {
     int result = 0;
@@ -161,18 +166,20 @@ template<class T> bool Graf<T>::isLinked()
     return isLinked;
 }
 
-template<class T> void Graf<T>::informOfLinking()
+template<class T> bool Graf<T>::informOfLinking()
 {
     bool result = isLinked();
     
-    if ( result == true ) cout << " Linked :) " <<endl;
-    else cout << " Not linked :( " <<endl;
+    if ( result == true ) cout << "Graph is linked :) \n" <<endl;
+    else cout << "Graph is not linked :( \n" <<endl;
+    
+    return result;
 }
 
 template <class T> void Graf<T>::lenght()
 {
     //cout << f << " <-> " << s << " length = " << lenght <<endl;
-    int res = 0;
+    /* int res = 0;
     
     for (int i = 0; i < mList.size(); i++)
     {
@@ -186,8 +193,89 @@ template <class T> void Graf<T>::lenght()
                 cout << i+1 << " <-> " << j+1 << " length = " << res << endl;
             }
         }
-        
     }
+     */
+    list<int> myList;
+    vector<int> used;
+    int lenght = 1;
+    
+    if ( informOfLinking() == false)
+    {
+        cout << "Lenght can't be determine complitely " <<endl;
+        return;
+    }
+    
+        for (int i = 0, cur = 1, target = 2; i < mList.size() && cur <= mList.size(); )
+        {
+            
+            bool isFind = false;
+            
+            for ( auto j = mList[i].begin(); j != mList[i].end(); j++)
+            {
+                //cout << i + 1 << " " << *j << endl;
+                if ( checked(i, used) == true )
+                {
+                    continue;
+                }
+                
+                if ( target == *j )
+                {
+                    if (cur < target)
+                    {
+                        cout << cur << " <-> " << target << " = " << lenght << endl;
+                    }
+                    //cout << cur << " <-> " << target << " = " << lenght << endl;
+                    isFind = true;
+                    break;
+                }
+                else
+                {
+                    if (checked(*j - 1, used) == false && checked(i, used) == false) {
+                        myList.push_back(*j - 1);
+                        //auto k = j;
+                        //if (k++ == mList[i].end())
+                        //    lenght--;
+                    }
+                }
+            }
+            
+            used.push_back(i);
+            
+            if (isFind == false)
+            {
+                if (myList.size() != 0)
+                {
+                    i = myList.front();
+                    myList.pop_front();
+                }
+                else
+                {
+                    cout << cur << " <-> " << target << " = " << 0 << endl;
+                    target++;
+                    lenght = 1;
+                    used.clear();
+                    if(target == mList.size() - 1)
+                        cur++;
+                }
+                myList.unique();
+                lenght++;
+            }
+            else
+            {
+                i = 0;
+                lenght = 1;
+                target++;
+                used.clear();
+                myList.clear();
+                if(target == mList.size() + 1)
+                {
+                    cur++;
+                    target = 1;
+                }
+                
+            }
+        }
+    cout << endl;
 }
     
     
