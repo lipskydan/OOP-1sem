@@ -6,6 +6,7 @@
 #include <QTime>
 #include <QLabel>
 #include <QVector>
+#include <QSound>
 
 namespace Ui {
 class MainWindow;
@@ -15,6 +16,8 @@ struct TimeLeft {
     int hours;
     int minutes;
     int seconds;
+    int sound_number;
+    bool was_played = false;
 };
 
 class MainWindow : public QMainWindow
@@ -27,8 +30,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QTimer *tmr;
-    QTimer *tmr2;
+    QTimer *timerForTimer;
+    QTimer *timerForAlarm;
+    QTimer *timerForMainClock;
 
     QVector<TimeLeft*> timeLeft;
     QVector<QLabel*> labels_timer;
@@ -40,13 +44,22 @@ private:
     int iForGrid_alarm;
     int jForGrid_alarm;
 
+    QSound* melody;
 private slots:
-    void update();
+    void updateTimer();
+    void updateAlarm();
     void start_clock();
     int reduceTime(TimeLeft* timeLeft);
+    void on_finish(TimeLeft* obj);
+    void setSoundNumber(TimeLeft* obj);
+
     void on_createTimer_clicked();
-    void on_Start_clicked();
-    void on_pushButton_clicked();
+
+    void on_stopSound_clicked();
+
+    void on_startTimer_clicked();
+    void on_startAlarm_clicked();
+    void on_createAlarm_clicked();
 };
 
 #endif // MAINWINDOW_H

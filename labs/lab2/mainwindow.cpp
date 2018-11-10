@@ -6,23 +6,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    tmr = NULL;
+
+    timerForMainClock = new QTimer(this); // Создаем объект класса QTimer и передаем адрес переменной
+    connect(timerForMainClock, SIGNAL(timeout()), this, SLOT(start_clock())); // Подключаем сигнал таймера к нашему слоту
+    if (timerForMainClock != NULL)
+        timerForMainClock->start(1000);
+
+    timerForTimer = NULL;
+    timerForAlarm = NULL;
+
     iForGrid_timer = 0;
     jForGrid_timer = 0;
-
-
-
-    tmr2 = new QTimer(this); // Создаем объект класса QTimer и передаем адрес переменной
-    connect(tmr2, SIGNAL(timeout()), this, SLOT(start_clock())); // Подключаем сигнал таймера к нашему слоту
-
-    if (tmr2 != NULL)
-        tmr2->start(1000);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete tmr;
+    delete timerForTimer;
 }
 
 
@@ -32,6 +32,8 @@ void MainWindow::on_createTimer_clicked()
     newTimer->hours = ui->hourEdit->text().toInt();
     newTimer->minutes = ui->minuteEdit->text().toInt();
     newTimer->seconds = ui->secondEdit->text().toInt();
+
+    setSoundNumber(newTimer);
 
     timeLeft.push_back(newTimer);
 
@@ -49,15 +51,6 @@ void MainWindow::on_createTimer_clicked()
     } else {
         iForGrid_timer++;
     }
-}
-
-void MainWindow::on_Start_clicked()
-{
-    tmr = new QTimer(this); // Создаем объект класса QTimer и передаем адрес переменной
-    connect(tmr, SIGNAL(timeout()), this, SLOT(update())); // Подключаем сигнал таймера к нашему слоту
-
-    if (tmr != NULL)
-        tmr->start(1000);
 }
 
 int MainWindow::reduceTime(TimeLeft* timeLeft)
@@ -86,25 +79,8 @@ int MainWindow::reduceTime(TimeLeft* timeLeft)
     }
     return 1;
 }
-
-void MainWindow::update()
+void MainWindow::updateAlarm()
 {
-    // For timers
-    for (int i = 0; i < ui->gridLayoutTimer->count(); i++)
-    {
-        QString result;
-        if (reduceTime(timeLeft[i]) == -1)
-        {
-                result = "finish";
-        } else {
-                result =    QString::number(timeLeft[i]->hours) + " : " +
-                            QString::number(timeLeft[i]->minutes) + " : " +
-                            QString::number(timeLeft[i]->seconds);
-        }
-
-        labels_timer[i]->setText(result);
-    }
-
     // For alarms
     for (int i = 0; i < ui->gridLayoutAlarm->count(); i++)
     {
@@ -113,18 +89,104 @@ void MainWindow::update()
 
         if (alarmTime.currentTime().toString() == alarmTime.toString())
         {
+                on_finish(alarmLeft[i]);
                 result = "finish";
                 labels_alarm[i]->setText(result);
         }
     }
 }
+void MainWindow::updateTimer()
+{
+    // For timers
+    for (int i = 0; i < ui->gridLayoutTimer->count(); i++)
+    {
+        if (timeLeft[i]->was_played)
+            continue;
+        QString result;
+        if (reduceTime(timeLeft[i]) == -1)
+        {
+                on_finish(timeLeft[i]);
+                result = "finish";
+                timeLeft[i]->was_played = true;
+        } else {
+                result =    QString::number(timeLeft[i]->hours) + " : " +
+                            QString::number(timeLeft[i]->minutes) + " : " +
+                            QString::number(timeLeft[i]->seconds);
+        }
 
-void MainWindow::on_pushButton_clicked()
+        labels_timer[i]->setText(result);
+    }
+}
+
+void MainWindow::on_finish(TimeLeft* obj)
+{
+    if (ui->doNotDisturb->isChecked() == false)
+    {
+        QString sound_name = "/Users/danial/timer/";
+        sound_name += QString::number(obj->sound_number) + ".wav";
+        melody = new QSound(sound_name);
+        melody->play();
+    }
+}
+
+void MainWindow::setSoundNumber(TimeLeft* obj)
+{
+    if (ui->radioButton_1->isChecked() == true)
+    {
+        obj->sound_number = 1;
+    } else if (ui->radioButton_2->isChecked() == true)
+    {
+        obj->sound_number = 2;
+    } else if (ui->radioButton_3->isChecked() == true)
+    {
+        obj->sound_number = 3;
+    } else if (ui->radioButton_4->isChecked() == true)
+    {
+        obj->sound_number = 4;
+    }
+}
+
+void MainWindow::start_clock()
+{
+    QTime curr_time = curr_time.currentTime();
+    ui->label_5->setText(curr_time.toString());
+}
+
+void MainWindow::on_stopSound_clicked()
+{
+    melody->stop();
+}
+
+void MainWindow::on_startTimer_clicked()
+{
+    timerForTimer = new QTimer(this); // Создаем объект класса QTimer и передаем адрес переменной
+    connect(timerForTimer, SIGNAL(timeout()), this, SLOT(updateTimer())); // Подключаем сигнал таймера к нашему слоту
+
+    if (timerForTimer != NULL)
+        timerForTimer->start(1000);
+
+    ui->startTimer->deleteLater();
+}
+
+void MainWindow::on_startAlarm_clicked()
+{
+    timerForAlarm = new QTimer(this); // Создаем объект класса QTimer и передаем адрес переменной
+    connect(timerForAlarm, SIGNAL(timeout()), this, SLOT(updateAlarm())); // Подключаем сигнал таймера к нашему слоту
+
+    if (timerForAlarm != NULL)
+        timerForAlarm->start(1000);
+
+    ui->startAlarm->deleteLater();
+}
+
+void MainWindow::on_createAlarm_clicked()
 {
     TimeLeft* newAlarm = new TimeLeft;
     newAlarm->hours = ui->hourEdit->text().toInt();
     newAlarm->minutes = ui->minuteEdit->text().toInt();
     newAlarm->seconds = ui->secondEdit->text().toInt();
+
+    setSoundNumber(newAlarm);
 
     alarmLeft.push_back(newAlarm);
 
@@ -142,10 +204,4 @@ void MainWindow::on_pushButton_clicked()
     } else {
         iForGrid_alarm++;
     }
-}
-
-void MainWindow::start_clock()
-{
-    QTime curr_time = curr_time.currentTime();
-    ui->label_5->setText(curr_time.toString());
 }
