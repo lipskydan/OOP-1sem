@@ -30,18 +30,18 @@ void MainWindow::on_pushButtonDownload_clicked()
 
     FILE *fp;
     CURLcode res;
-    QByteArray ba = urlPath.toLocal8Bit();
-    const char* c_str = ba.data();
+    QByteArray ba_url = urlPath.toLocal8Bit();
+    const char* c_str_url = ba_url.data();
 
     QString path = userPath + downloadPath;
-    QByteArray ba2 = path.toLocal8Bit();
-    const char* c_str2 = ba2.data();
+    QByteArray ba_download = path.toLocal8Bit();
+    const char* c_str_download = ba_download.data();
 
-    fp = fopen(c_str2,"wb");
+    fp = fopen(c_str_download,"wb");
 
 
 
-    curl_easy_setopt(curl, CURLOPT_URL, c_str);
+    curl_easy_setopt(curl, CURLOPT_URL, c_str_url);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
 
